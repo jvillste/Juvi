@@ -1,6 +1,8 @@
 package juvi
 
-import java.io.{File, FileInputStream, ByteArrayOutputStream}
+import java.io._
+import scala.io.Source
+import Using._
 
 object File
 {
@@ -21,5 +23,24 @@ object File
       inStream.close()
     }
     new String(outStream.toByteArray(), encoding)
+  }
+
+  def catenateFiles(files:Iterable[File], target:File, encoding:String, filter:(String) => Boolean = (_) => true)
+  {
+    val fileOutputStream = new FileOutputStream(target)
+
+    using(new OutputStreamWriter(fileOutputStream, encoding))
+    { writer =>
+
+      for(file <- files)
+      {
+        for (line <- Source.fromFile(file,encoding).getLines)
+        {
+          if(filter(line))
+            writer.write(line + "\n")
+        }
+      }
+    }
+
   }
 }
