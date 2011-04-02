@@ -19,7 +19,7 @@ trait JDBC extends ConnectionProvider
 
   def usingPreparedStatement[A](statementSource:String)(f: PreparedStatement => A) : A =
   {
-   // println(statementSource)
+    // println(statementSource)
 
     using(getConnection) {connection =>
       using(connection.prepareStatement(statementSource)){preparedStatement =>
